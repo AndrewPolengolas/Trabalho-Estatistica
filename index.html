@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <script src="script.js"></script> -->
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="container">
+        <div id="entrada-dados">
+            <label>Selecione a quantidade de dados a serem colocados</label>
+            <input id="tamanho-array" type="number">
+            <button id="bnt-tamanho-array">Gerar relatórios</button>
+        </div>
+
+        <div id="entrada-dados">
+            <label>Entrada de dados</label>
+            <input id="entrada" type="number">
+            <button id="bnt">Gerar relatórios</button>
+        </div>
+
+        <div id="dados-rol">
+            <label style="width: 100%; text-align: center;">Dados</label>
+            <ul id="itens" style="list-style: none">
+
+            </ul>
+
+            <label style="width: 100%; text-align: center;">Rol</label>
+            <ul id="rol" style="list-style: none">
+
+            </ul>
+        </div>
+
+        <div id="mediana">
+            <label class="mediana">Media</label>
+            <label id="resultado-media"></label>
+        </div>
+
+        <div id="mediana">
+            <label class="mediana">Mediana</label>
+            <label id="resultado-mediana"></label>
+        </div>
+
+        <div id="mediana">
+            <label class="mediana">Moda</label>
+            <label id="resultado-moda"></label>
+        </div>
+
+        <div id="mediana">
+            <label class="mediana">Desvio Absoluto</label>
+            <label id="resultado-desvio-absoluto"></label>
+        </div>
+
+        <div id="mediana">
+            <label class="mediana">Variância</label>
+            <label id="resultado-variancia"></label>
+        </div>
+
+        <div id="mediana">
+            <label class="mediana">Desvio Padrão</label>
+            <label id="resultado-desvio-padrao"></label>
+        </div>
+
+        <div id="mediana">
+            <table style="width:40%">
+                <thead>
+                    <th>classes</th>
+                    <th>ponto médio(xi)</th>
+                    <th>frequência absoluta(ni)</th>
+                    <th>frequência relativa(fi)</th>
+                    <th>% (100*fi)</th>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td>0 - 10</td>
+                        <td>5</td>
+                        <td id="freqAbsoluta1"></td>
+                        <td id="freqRelativa1"></td>
+                        <td id="frecPorcento1"></td>
+                    </tr>
+                    <tr>
+                        <td>10 - 20</td>
+                        <td>15</td>
+                        <td id="freqAbsoluta2"></td>
+                        <td id="freqRelativa2"></td>
+                        <td id="frecPorcento2"></td>
+                    </tr>
+                    <tr>
+                        <td>20 - 30</td>
+                        <td>25</td>
+                        <td id="freqAbsoluta3"></td>
+                        <td id="freqRelativa3"></td>
+                        <td id="frecPorcento3"></td>
+                    </tr>
+                    <tr>
+                        <td>30 - 40</td>
+                        <td>35</td>
+                        <td id="freqAbsoluta4"></td>
+                        <td id="freqRelativa4"></td>
+                        <td id="frecPorcento4"></td>
+                    </tr>
+                    <tr>
+                        <td>40 - 50</td>
+                        <td>45</td>
+                        <td id="freqAbsoluta5"></td>
+                        <td id="freqRelativa5"></td>
+                        <td id="frecPorcento5"></td>
+                    </tr>
+                    <tr>
+                        <td>50 - 60</td>
+                        <td>55</td>
+                        <td id="freqAbsoluta6"></td>
+                        <td id="freqRelativa6"></td>
+                        <td id="frecPorcento6"></td>
+                    </tr>
+                    <tr>
+                        <td>60 - 70</td>
+                        <td>65</td>
+                        <td id="freqAbsoluta7"></td>
+                        <td id="freqRelativa7"></td>
+                        <td id="frecPorcento7"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script>
+        let tamanhoArray = document.getElementById('tamanho-array')
+        let bntTamanhoArray = document.getElementById('bnt-tamanho-array')
+        let entrada = document.getElementById('entrada')
+        let botao = document.getElementById('bnt')
+        let mediana = document.getElementById('resultado-mediana')
+        let media = document.getElementById('resultado-media')
+        let moda = document.getElementById('resultado-moda')
+        let desvioAbsoluto = document.getElementById('resultado-desvio-absoluto')
+        let variancia = document.getElementById('resultado-variancia')
+        let desvioPadao = document.getElementById('resultado-desvio-padrao')
+        let array = [];
+        var global = 0
+
+        botao.disabled = true
+
+        bntTamanhoArray.addEventListener('click', ativaBotao)
+
+        function ativaBotao() {
+            if (tamanhoArray.value !== '') {
+                botao.disabled = false
+                bntTamanhoArray.disabled = true
+            }
+        }
+
+        botao.addEventListener('click', valor)
+
+        function valor() {
+
+            if (entrada.value === '') {
+                array.push(parseInt(0))
+            } else {
+                array.push(parseInt(entrada.value))
+            }
+
+            document.querySelector('#itens')
+                .insertAdjacentHTML('beforeend', '<li > ' + array[global] + '</li>');
+
+            global++
+
+            if (global >= tamanhoArray.value) {
+
+                botao.disabled = true
+
+                array.sort((a, b) => a - b)
+
+                for (let i = 0; i < array.length; i++) {
+                    document.querySelector('#rol')
+                        .insertAdjacentHTML('beforeend', '<li > ' + array[i] + '</li>');
+                }
+
+                media.innerHTML = calcMedia(array)
+
+                mediana.innerHTML = calcMediana(array)
+
+                moda.innerHTML = calcModa(array)
+
+                desvioAbsoluto.innerHTML = desvioAbsolutoMedio(array)
+
+                variancia.innerHTML = calcVariancia(array)
+
+                desvioPadao.innerHTML = calcDesvioPadrao(array)
+
+                separaArray(array)
+
+            }
+
+            entrada.value = ''
+
+            console.log(array)
+        }
+
+        function calcModa(array) {
+            const acharMaior = (counter) => Math.max.apply(null, counter)
+            const ordenarMenorParaMaior = (a, b) => a - b
+            const mapearOcorencias = (name) => {
+                return { count: 1, name: name }
+            }
+            const contarOcorrencia = (a, b) => {
+                a[b.name] = (a[b.name] || 0) + b.count
+                return a
+            }
+            const mapearParaArray = (contagem) => {
+                const counter = []
+                Object.keys(contagem).filter((a) => {
+                    counter.push(contagem[a])
+                })
+                return counter
+            }
+            const filtrarModa = (contagem, MAX) => Object.keys(contagem).filter((a) => {
+                return (contagem[a] === MAX && contagem[a] > 1) ? contagem[a] : null
+            })
+
+            function moda(arr) {
+                const contagem = arr.sort(ordenarMenorParaMaior).map(mapearOcorencias).reduce(contarOcorrencia, {})
+                const filtrada = filtrarModa(contagem, acharMaior(mapearParaArray(contagem)))
+                return filtrada.length ? filtrada : 0
+            }
+
+            return moda(array)
+        }
+
+        function calcMedia(array) {
+            let media = 0
+
+            for (let i = 0; i < array.length; i++) {
+                media += array[i]
+            }
+
+            return media / 40
+        }
+
+        function calcMediana(array) {
+            let meioArrayImpar = ((array.length / 2) + 0.5) - 1
+            let meioArrayPar = (array.length / 2) - 1
+            let modulo = array.length % 2
+            let aux = 0
+
+            if (modulo == 0) {
+                aux = (array[meioArrayPar] + array[meioArrayPar + 1]) / 2
+                return aux
+            } else {
+                return array[meioArrayImpar]
+            }
+        }
+
+        function desvioAbsolutoMedio(array) {
+            let media = 0
+            let distancia = 0
+
+            for (let i = 0; i < array.length; i++) {
+                media += array[i]
+            }
+
+            media = media / array.length
+
+            for (let i = 0; i < array.length; i++) {
+                let aux = array[i] - media
+                distancia += converteParaPositivo(aux)
+            }
+
+            function converteParaPositivo(a) {
+                if (a < 0) {
+                    a = a * -1;
+                }
+                return a;
+            }
+
+            distancia = distancia / array.length
+
+            return distancia
+        }
+
+        function calcVariancia(array) {
+            let media = 0
+            let distancia = 0
+
+            for (let i = 0; i < array.length; i++) {
+                media += array[i]
+            }
+
+            media = media / array.length
+
+            for (let i = 0; i < array.length; i++) {
+                let aux = media - array[i]
+                distancia += Math.pow(aux, 2)
+            }
+
+            distancia = distancia / array.length
+
+            return distancia
+        }
+
+        function calcDesvioPadrao(array) {
+            let desvioPadao = calcVariancia(array)
+
+            return Math.sqrt(desvioPadao)
+        }
+
+        function separaArray(array) {
+            let array1 = [];
+            let array2 = [];
+            let array3 = [];
+            let array4 = [];
+            let array5 = [];
+            let array6 = [];
+            let array7 = [];
+
+            for (let i = 0; i < array.length; i++) {
+
+                if (array[i] < 10) {
+                    array1.push(array[i])
+                }
+                if (array[i] >= 10 && array[i] < 20) {
+                    array2.push(array[i])
+                }
+                if (array[i] >= 20 && array[i] < 30) {
+                    array3.push(array[i])
+                }
+                if (array[i] >= 30 && array[i] < 40) {
+                    array4.push(array[i])
+                }
+                if (array[i] >= 40 && array[i] < 50) {
+                    array5.push(array[i])
+                }
+                if (array[i] >= 50 && array[i] < 60) {
+                    array6.push(array[i])
+                }
+                if (array[i] >= 60 && array[i] <= 70) {
+                    array7.push(array[i])
+                }
+                console.log(array[i])
+            }
+
+            console.log(array1)
+            console.log(array2)
+            console.log(array3)
+            console.log(array4)
+            console.log(array5)
+            console.log(array6)
+            console.log(array7)
+
+            let freqAbsoluta1 = document.getElementById('freqAbsoluta1')
+            let freqAbsoluta2 = document.getElementById('freqAbsoluta2')
+            let freqAbsoluta3 = document.getElementById('freqAbsoluta3')
+            let freqAbsoluta4 = document.getElementById('freqAbsoluta4')
+            let freqAbsoluta5 = document.getElementById('freqAbsoluta5')
+            let freqAbsoluta6 = document.getElementById('freqAbsoluta6')
+            let freqAbsoluta7 = document.getElementById('freqAbsoluta7')
+
+            freqAbsoluta1.innerHTML = array1.length
+            freqAbsoluta2.innerHTML = array2.length
+            freqAbsoluta3.innerHTML = array3.length
+            freqAbsoluta4.innerHTML = array4.length
+            freqAbsoluta5.innerHTML = array5.length
+            freqAbsoluta6.innerHTML = array6.length
+            freqAbsoluta7.innerHTML = array7.length
+
+            let freqRelativa1 = document.getElementById('freqRelativa1')
+            let freqRelativa2 = document.getElementById('freqRelativa2')
+            let freqRelativa3 = document.getElementById('freqRelativa3')
+            let freqRelativa4 = document.getElementById('freqRelativa4')
+            let freqRelativa5 = document.getElementById('freqRelativa5')
+            let freqRelativa6 = document.getElementById('freqRelativa6')
+            let freqRelativa7 = document.getElementById('freqRelativa7')
+
+            freqRelativa1.innerHTML = array1.length / 40
+            freqRelativa2.innerHTML = array2.length / 40
+            freqRelativa3.innerHTML = array3.length / 40
+            freqRelativa4.innerHTML = array4.length / 40
+            freqRelativa5.innerHTML = array5.length / 40
+            freqRelativa6.innerHTML = array6.length / 40
+            freqRelativa7.innerHTML = array7.length / 40
+
+            let frecPorcento1 = document.getElementById('frecPorcento1')
+            let frecPorcento2 = document.getElementById('frecPorcento2')
+            let frecPorcento3 = document.getElementById('frecPorcento3')
+            let frecPorcento4 = document.getElementById('frecPorcento4')
+            let frecPorcento5 = document.getElementById('frecPorcento5')
+            let frecPorcento6 = document.getElementById('frecPorcento6')
+            let frecPorcento7 = document.getElementById('frecPorcento7')
+
+            frecPorcento1.innerHTML = (array1.length / 40) * 100
+            frecPorcento2.innerHTML = (array2.length / 40) * 100
+            frecPorcento3.innerHTML = (array3.length / 40) * 100
+            frecPorcento4.innerHTML = (array4.length / 40) * 100
+            frecPorcento5.innerHTML = (array5.length / 40) * 100
+            frecPorcento6.innerHTML = (array6.length / 40) * 100
+            frecPorcento7.innerHTML = (array7.length / 40) * 100
+        }
+
+    </script>
+</body>
+
+</html>
